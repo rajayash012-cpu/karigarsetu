@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_md" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9a3412"/>
+      <stop offset="50%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="skin_md" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#9a3412"/>
+    </linearGradient>
+    <linearGradient id="kurta_md" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="clay_md" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="28" fill="url(#bg_md)"/>
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#fdba74" stroke-width="2" opacity="0.35"/>
+  <circle cx="100" cy="100" r="60" fill="none" stroke="#fdba74" stroke-width="1" stroke-dasharray="5,5" opacity="0.3"/>
+  <path d="M160,35 L165,55 L158,65 L170,62 L168,75 L160,78" stroke="#fed7aa" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M35,200 C35,145 65,135 100,135 C135,135 165,145 165,200 Z" fill="url(#kurta_md)"/>
+  <path d="M40,175 Q70,140 85,200" stroke="#b91c1c" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M85,135 L100,162 L115,135 Z" fill="#e2e8f0"/>
+  <rect x="88" y="110" width="24" height="30" rx="6" fill="url(#skin_md)"/>
+  <ellipse cx="100" cy="85" rx="35" ry="41" fill="url(#skin_md)"/>
+  <path d="M66,75 C66,45 80,40 100,40 C120,40 134,45 134,75 C128,52 115,48 100,48 C82,48 72,55 66,75 Z" fill="#18181b"/>
+  <ellipse cx="86" cy="82" rx="3.5" ry="3.5" fill="#18181b"/>
+  <ellipse cx="114" cy="82" rx="3.5" ry="3.5" fill="#18181b"/>
+  <path d="M80,75 Q86,72 92,75" stroke="#18181b" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M108,75 Q114,72 120,75" stroke="#18181b" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M89,102 Q100,111 111,102" stroke="#451a03" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="100" cy="66" r="3" fill="#fef08a"/>
+  <rect x="15" y="170" width="170" height="22" rx="6" fill="#431407" fill-opacity="0.9"/>
+  <text x="100" y="185" font-family="sans-serif" font-size="10" font-weight="bold" fill="#fdba74" text-anchor="middle">MOHAN DAS • TERRACOTTA</text>
+</svg>

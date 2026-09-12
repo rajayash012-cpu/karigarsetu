@@ -1,0 +1,607 @@
+# scripts/data_inquiries_scenarios.py
+# 54 realistic B2B inquiries linking buyers, products, and artisans across 7 statuses
+# 8 curated SIH demo presentation scenarios
+
+INQUIRIES_CONFIG = [
+    # 1. New inquiries
+    {
+        "id": "inq-1", "productId": "p8", "productName": "Tribal Dokra Brass Elephant Figurine",
+        "artisanId": "artisan-4", "buyerId": "buyer-1", "buyerName": "Ananya Sharma", "buyerOrg": "Ananya Home Collective",
+        "quantity": 80, "targetPrice": 2200, "timeline": "Within 4 weeks (Diwali season)",
+        "notes": "Interested in 80 units for our festive ethnic accents collection in Delhi and Gurugram stores. Requesting custom cotton-pouch packaging and artisan story cards.",
+        "status": "New", "daysAgo": 1
+    },
+    {
+        "id": "inq-2", "productId": "p1", "productName": "Hand-Painted Madhubani Folk Art (Tree of Life)",
+        "artisanId": "artisan-1", "buyerId": "buyer-2", "buyerName": "Vikram Singhania", "buyerOrg": "Heritage Living Studio",
+        "quantity": 35, "targetPrice": 2850, "timeline": "Ready in 3 weeks",
+        "notes": "Curating for a luxury boutique resort near Coorg. Need natural pinewood frames and GI certificate QR stickers on each piece.",
+        "status": "Viewed", "daysAgo": 2
+    },
+    {
+        "id": "inq-3", "productId": "p48", "productName": "Pure Katan Silk Banarasi Saree with Kadwa Zari",
+        "artisanId": "artisan-23", "buyerId": "buyer-12", "buyerName": "Rohit Malhotra", "buyerOrg": "Roots & Loom Global Exports",
+        "quantity": 15, "targetPrice": 25500, "timeline": "Export air shipment in 6 weeks",
+        "notes": "Sourcing for an Indian textile trunk show in London & New York. Silk Mark certification and master artisan bio card required for each saree.",
+        "status": "Negotiating", "daysAgo": 4
+    },
+    {
+        "id": "inq-4", "productId": "p55", "productName": "Moradabadi Handcrafted Brass Peacock Diya Set",
+        "artisanId": "artisan-26", "buyerId": "buyer-5", "buyerName": "Suresh Singhal", "buyerOrg": "Traditional India Corporate Gifts",
+        "quantity": 250, "targetPrice": 2050, "timeline": "Urgent delivery within 18 days",
+        "notes": "Diwali gift hampers for Fortune 500 tech clients in Gurugram and Bangalore. Individual satin-lined gift boxes with corporate branding sleeve.",
+        "status": "Accepted", "daysAgo": 6
+    },
+    {
+        "id": "inq-5", "productId": "p25", "productName": "Jaipur Traditional Blue Pottery Decorative Wall Plate",
+        "artisanId": "artisan-12", "buyerId": "buyer-3", "buyerName": "Karthik Ramanathan", "buyerOrg": "CraftBasket Retail Stores",
+        "quantity": 120, "targetPrice": 1450, "timeline": "Deliver in 4 weeks",
+        "notes": "Stocking our South India retail chain across Bangalore, Chennai, and Hyderabad. Need secure thermocol transit cartons to ensure zero breakage.",
+        "status": "Responded", "daysAgo": 3
+    },
+    {
+        "id": "inq-6", "productId": "p63", "productName": "Hand-Carved Kashmiri Walnut Wood Box with Chinar Relief",
+        "artisanId": "artisan-30", "buyerId": "buyer-6", "buyerName": "Rajiv Mehra", "buyerOrg": "Vistara Heritage Hospitality",
+        "quantity": 40, "targetPrice": 4200, "timeline": "5 weeks lead time",
+        "notes": "VIP room amenities for presidential suites at our Udaipur and Goa properties. Velvet inner color to be royal maroon.",
+        "status": "Fulfilled", "daysAgo": 18
+    },
+    {
+        "id": "inq-7", "productId": "p107", "productName": "Bastar Hand-Forged Wrought Iron Deer Figurine (Pair)",
+        "artisanId": "artisan-52", "buyerId": "buyer-7", "buyerName": "Debashis Mukherjee", "buyerOrg": "Sanskriti Museum Shop",
+        "quantity": 50, "targetPrice": 1950, "timeline": "Deliver in 3 weeks",
+        "notes": "Selected for the Tribal Metallurgy retrospective at Kolkata. Need certificate of authentic Bastar Loha Shilp craft origin.",
+        "status": "Accepted", "daysAgo": 8
+    },
+    {
+        "id": "inq-8", "productId": "p61", "productName": "Pure Merino Wool Kullu Shawl with Traditional Geometric Border",
+        "artisanId": "artisan-29", "buyerId": "buyer-18", "buyerName": "Capt. Alok Bakshi", "buyerOrg": "Himalayan Craft & Pine",
+        "quantity": 60, "targetPrice": 3250, "timeline": "Pre-winter stocking (within 3 weeks)",
+        "notes": "Supplying our tourist boutique stores in Shimla, Manali, and Dharamshala. Woolmark and Handloom Mark tags mandatory.",
+        "status": "Fulfilled", "daysAgo": 25
+    },
+    {
+        "id": "inq-9", "productId": "p4", "productName": "Handwoven Golden Sikki Grass Decorative Pauti Box",
+        "artisanId": "artisan-2", "buyerId": "buyer-31", "buyerName": "Nalini Sundaram", "buyerOrg": "Ecosphere Lifestyle Goods",
+        "quantity": 75, "targetPrice": 1100, "timeline": "3 weeks",
+        "notes": "Zero-waste sustainable storage container series. Need individual biodegradable brown paper wraps.",
+        "status": "Responded", "daysAgo": 2
+    },
+    {
+        "id": "inq-10", "productId": "p6", "productName": "Handcrafted Khatwa Applique Cotton Cushion Covers (Pair)",
+        "artisanId": "artisan-3", "buyerId": "buyer-2", "buyerName": "Vikram Singhania", "buyerOrg": "Heritage Living Studio",
+        "quantity": 40, "targetPrice": 1300, "timeline": "3 weeks",
+        "notes": "Boutique heritage homestay furnishing. Indigo and off-white color palette preferred.",
+        "status": "Negotiating", "daysAgo": 5
+    },
+    {
+        "id": "inq-11", "productId": "p11", "productName": "Authentic Sohrai Harvest Mural on Stretched Linen Canvas",
+        "artisanId": "artisan-5", "buyerId": "buyer-21", "buyerName": "Siddharth Tirkey", "buyerOrg": "Ranchi Tribal Arts Co.",
+        "quantity": 20, "targetPrice": 3400, "timeline": "4 weeks",
+        "notes": "Corporate office reception artwork for mineral and metal company headquarters in Jamshedpur.",
+        "status": "Viewed", "daysAgo": 3
+    },
+    {
+        "id": "inq-12", "productId": "p13", "productName": "Bankura Long-Neck Terracotta Horse (Pair, 14-inch)",
+        "artisanId": "artisan-6", "buyerId": "buyer-27", "buyerName": "Subir Ganguly", "buyerOrg": "Kolkata Craft Connoisseurs",
+        "quantity": 30, "targetPrice": 1750, "timeline": "Immediate fulfillment (2 weeks)",
+        "notes": "Exhibition souvenir supply. Double-layered corrugated bubble packing required.",
+        "status": "Accepted", "daysAgo": 9
+    },
+    {
+        "id": "inq-13", "productId": "p15", "productName": "Hand-Embroidered Kantha Stitch Pure Tussar Silk Stole",
+        "artisanId": "artisan-7", "buyerId": "buyer-4", "buyerName": "Meenakshi Sundaram", "buyerOrg": "Urban Ethnic Store",
+        "quantity": 25, "targetPrice": 3800, "timeline": "Within 1 month",
+        "notes": "Festive collection for Chennai and Coimbatore flagship stores. Soft pastel base fabrics preferred.",
+        "status": "Negotiating", "daysAgo": 7
+    },
+    {
+        "id": "inq-14", "productId": "p17", "productName": "Raghurajpur Pattachitra Scroll — Dasavatara of Lord Vishnu",
+        "artisanId": "artisan-8", "buyerId": "buyer-7", "buyerName": "Debashis Mukherjee", "buyerOrg": "Sanskriti Museum Shop",
+        "quantity": 5, "targetPrice": 17000, "timeline": "6 weeks",
+        "notes": "Collector edition acquisitions for international museum patrons. Signed provenance certificate required from the artist.",
+        "status": "Accepted", "daysAgo": 12
+    },
+    {
+        "id": "inq-15", "productId": "p19", "productName": "Sambalpuri Bandha Double Ikat Pure Mulberry Silk Saree",
+        "artisanId": "artisan-9", "buyerId": "buyer-17", "buyerName": "Bikram Keshari Jena", "buyerOrg": "Tribal Loom & Earth",
+        "quantity": 12, "targetPrice": 11800, "timeline": "5 weeks",
+        "notes": "Wedding season boutique collection. Traditional red and black Pasapalli pattern required.",
+        "status": "Responded", "daysAgo": 2
+    },
+    {
+        "id": "inq-16", "productId": "p21", "productName": "Cuttack Tarkasi 92.5 Sterling Silver Konark Wheel Brooch",
+        "artisanId": "artisan-10", "buyerId": "buyer-5", "buyerName": "Suresh Singhal", "buyerOrg": "Traditional India Corporate Gifts",
+        "quantity": 100, "targetPrice": 3450, "timeline": "4 weeks",
+        "notes": "Distinguished speaker memento for an upcoming international energy conclave in New Delhi. Velvet display box with silver purity card.",
+        "status": "Accepted", "daysAgo": 10
+    },
+    {
+        "id": "inq-17", "productId": "p23", "productName": "Bagru Dabu Mud-Resist Hand Block Printed Cotton Saree",
+        "artisanId": "artisan-11", "buyerId": "buyer-13", "buyerName": "Hitesh Shah", "buyerOrg": "Rang Bazaar Lifestyle",
+        "quantity": 60, "targetPrice": 2350, "timeline": "3 weeks",
+        "notes": "Sourcing for our Ahmedabad and Surat retail stores. Natural indigo and madder red prints only.",
+        "status": "Fulfilled", "daysAgo": 20
+    },
+    {
+        "id": "inq-18", "productId": "p28", "productName": "Kishangarh Bani Thani Traditional Miniature Painting on Silk",
+        "artisanId": "artisan-13", "buyerId": "buyer-28", "buyerName": "Padmanabh Kothari", "buyerOrg": "Jaipur Gem & Craft Atelier",
+        "quantity": 8, "targetPrice": 5900, "timeline": "4 weeks",
+        "notes": "Luxury fine art gallery exhibition in Jaipur. High precision gold-leaf embellishment requested.",
+        "status": "Negotiating", "daysAgo": 6
+    },
+    {
+        "id": "inq-19", "productId": "p30", "productName": "Traditional Handcrafted Camel Leather Embroidered Mojari (Jutti)",
+        "artisanId": "artisan-14", "buyerId": "buyer-4", "buyerName": "Meenakshi Sundaram", "buyerOrg": "Urban Ethnic Store",
+        "quantity": 80, "targetPrice": 1450, "timeline": "3 weeks",
+        "notes": "Size assortment from UK 7 to 10. Durable rubber half-sole reinforcement preferred for urban footpaths.",
+        "status": "Responded", "daysAgo": 1
+    },
+    {
+        "id": "inq-20", "productId": "p32", "productName": "Nirona Rogan Castor-Oil Freehand Painted Silk Stole",
+        "artisanId": "artisan-15", "buyerId": "buyer-12", "buyerName": "Rohit Malhotra", "buyerOrg": "Roots & Loom Global Exports",
+        "quantity": 10, "targetPrice": 6700, "timeline": "6 weeks",
+        "notes": "Exclusive heritage collection for curated museum stores in Paris. Documentation video clip of artisan painting requested.",
+        "status": "Accepted", "daysAgo": 14
+    },
+    {
+        "id": "inq-21", "productId": "p34", "productName": "Bhujodi Organic Kala Cotton Handwoven Shawl with Extra-Weft",
+        "artisanId": "artisan-16", "buyerId": "buyer-31", "buyerName": "Nalini Sundaram", "buyerOrg": "Ecosphere Lifestyle Goods",
+        "quantity": 30, "targetPrice": 4300, "timeline": "4 weeks",
+        "notes": "Sustainable luxury winterwear. 100% organic cotton certification tags to be attached.",
+        "status": "New", "daysAgo": 1
+    },
+    {
+        "id": "inq-22", "productId": "p36", "productName": "Jamnagar Hand-Knotted Pure Georgette Bandhani Dupatta",
+        "artisanId": "artisan-17", "buyerId": "buyer-23", "buyerName": "Parag Zaveri", "buyerOrg": "Surat Silk & Brocade Hub",
+        "quantity": 50, "targetPrice": 3200, "timeline": "3 weeks",
+        "notes": "Festive ethnic wear wholesale order. Assorted bright colors (Rani pink, Royal blue, Haldi yellow).",
+        "status": "Viewed", "daysAgo": 2
+    },
+    {
+        "id": "inq-23", "productId": "p38", "productName": "Polished Cambay Moss Agate Coaster Set with Brass Rim (4 Pcs)",
+        "artisanId": "artisan-18", "buyerId": "buyer-9", "buyerName": "Raghavendra Rathore", "buyerOrg": "Marwar Luxury Living",
+        "quantity": 40, "targetPrice": 1300, "timeline": "3 weeks",
+        "notes": "Accent tabletop items for palace hotel renovation in Jodhpur. Solid brass rim with protective lacquer.",
+        "status": "Negotiating", "daysAgo": 4
+    },
+    {
+        "id": "inq-24", "productId": "p40", "productName": "Chanderi Silk-Cotton Handloom Saree with Gold Ashavali Border",
+        "artisanId": "artisan-19", "buyerId": "buyer-11", "buyerName": "Pooja Agrawal", "buyerOrg": "Kashi Zari Boutiques",
+        "quantity": 20, "targetPrice": 7100, "timeline": "4 weeks",
+        "notes": "Pastel shades (powder blue, mint green, blush pink) for summer wedding celebrations.",
+        "status": "Responded", "daysAgo": 3
+    },
+    {
+        "id": "inq-25", "productId": "p42", "productName": "Authentic Bagh Hand-Block Printed Cotton Double Bedcover",
+        "artisanId": "artisan-20", "buyerId": "buyer-20", "buyerName": "Vandana Kasliwal", "buyerOrg": "Central India Craft Emporium",
+        "quantity": 35, "targetPrice": 2550, "timeline": "3 weeks",
+        "notes": "Supplying regional heritage boutique properties across Madhya Pradesh.",
+        "status": "Accepted", "daysAgo": 11
+    },
+    {
+        "id": "inq-26", "productId": "p44", "productName": "Gond Hand-Painted Acrylic Canvas — Birds in sacred Mahua Tree",
+        "artisanId": "artisan-21", "buyerId": "buyer-15", "buyerName": "Aditya Sengupta", "buyerOrg": "Bharat Décor Collective",
+        "quantity": 10, "targetPrice": 4800, "timeline": "4 weeks",
+        "notes": "Online platform feature artist of the month. High resolution certificates of authenticity required.",
+        "status": "Negotiating", "daysAgo": 5
+    },
+    {
+        "id": "inq-27", "productId": "p46", "productName": "Tikamgarh Bell Metal Ritual Gauri-Shankar Oil Lamp (Diya)",
+        "artisanId": "artisan-22", "buyerId": "buyer-8", "buyerName": "C. Seshagiri Rao", "buyerOrg": "Deccan Craft Emporium",
+        "quantity": 25, "targetPrice": 2450, "timeline": "3 weeks",
+        "notes": "Temple pooja counter retail stock for Hyderabad emporium.",
+        "status": "Fulfilled", "daysAgo": 22
+    },
+    {
+        "id": "inq-28", "productId": "p51", "productName": "Khurja Hand-Painted Ceramic Chai Cup & Saucer Set (6 Pcs)",
+        "artisanId": "artisan-24", "buyerId": "buyer-19", "buyerName": "Chef K. M. Joseph", "buyerOrg": "Malabar Heritage Dining",
+        "quantity": 40, "targetPrice": 850, "timeline": "2 weeks",
+        "notes": "Table service for our heritage cafe concept in Fort Kochi. Heavy commercial dishwasher testing required.",
+        "status": "Accepted", "daysAgo": 7
+    },
+    {
+        "id": "inq-29", "productId": "p53", "productName": "Lucknowi Hand-Embroidered Pure Mulmul Kurta (Bakhiya & Phanda)",
+        "artisanId": "artisan-25", "buyerId": "buyer-16", "buyerName": "Mirza Tariq Beg", "buyerOrg": "Awadh Royal Wedding Suppliers",
+        "quantity": 25, "targetPrice": 3050, "timeline": "3 weeks",
+        "notes": "Groom squad custom ensembles. Sizes 40 and 42 in pure ivory white.",
+        "status": "Negotiating", "daysAgo": 3
+    },
+    {
+        "id": "inq-30", "productId": "p56", "productName": "Ornate Hand-Etched Brass Serving Tray with Antique Patina",
+        "artisanId": "artisan-26", "buyerId": "buyer-6", "buyerName": "Rajiv Mehra", "buyerOrg": "Vistara Heritage Hospitality",
+        "quantity": 30, "targetPrice": 2750, "timeline": "4 weeks",
+        "notes": "Bar and beverage service trays for our new luxury property in Mahabaleshwar.",
+        "status": "Responded", "daysAgo": 1
+    },
+    {
+        "id": "inq-31", "productId": "p57", "productName": "Saharanpur Hand-Carved Sheesham Wood Jali Room Divider",
+        "artisanId": "artisan-27", "buyerId": "buyer-9", "buyerName": "Raghavendra Rathore", "buyerOrg": "Marwar Luxury Living",
+        "quantity": 8, "targetPrice": 13200, "timeline": "5 weeks",
+        "notes": "Suites partition in luxury heritage palace hotel in Jaisalmer. Dark walnut matte finish.",
+        "status": "Accepted", "daysAgo": 15
+    },
+    {
+        "id": "inq-32", "productId": "p59", "productName": "Kumaoni Traditional Aipan Hand-Painted Wooden Pooja Chowki",
+        "artisanId": "artisan-28", "buyerId": "buyer-22", "buyerName": "Amitav Verma", "buyerOrg": "Patliputra Heritage Gift Studio",
+        "quantity": 30, "targetPrice": 1550, "timeline": "3 weeks",
+        "notes": "Chhath and Diwali spiritual gift hampers in Patna. Packed in printed jute totes.",
+        "status": "Fulfilled", "daysAgo": 28
+    },
+    {
+        "id": "inq-33", "productId": "p65", "productName": "Pure Kashmiri Pashmina Shawl with Hand Sozni Needlework",
+        "artisanId": "artisan-31", "buyerId": "buyer-12", "buyerName": "Rohit Malhotra", "buyerOrg": "Roots & Loom Global Exports",
+        "quantity": 5, "targetPrice": 24000, "timeline": "7 weeks",
+        "notes": "Exclusive luxury consignment for boutique buyers in Geneva and Zurich.",
+        "status": "Negotiating", "daysAgo": 8
+    },
+    {
+        "id": "inq-34", "productId": "p67", "productName": "Kashmiri Papier-Mâché Oval Trinket Box with 24K Real Gold Dust",
+        "artisanId": "artisan-32", "buyerId": "buyer-18", "buyerName": "Capt. Alok Bakshi", "buyerOrg": "Himalayan Craft & Pine",
+        "quantity": 50, "targetPrice": 1650, "timeline": "3 weeks",
+        "notes": "Premium souvenir line in Chandigarh and Shimla gift stores. Individual velvet pouches.",
+        "status": "New", "daysAgo": 1
+    },
+    {
+        "id": "inq-35", "productId": "p69", "productName": "Traditional Heavy Bagh Phulkari Hand-Embroidered Georgette Dupatta",
+        "artisanId": "artisan-33", "buyerId": "buyer-25", "buyerName": "Gurmeet Singh Brar", "buyerOrg": "Punjab Virasat Ethnic Studio",
+        "quantity": 20, "targetPrice": 4200, "timeline": "4 weeks",
+        "notes": "Bridal trousseau orders for NRI clients visiting Punjab during wedding season.",
+        "status": "Viewed", "daysAgo": 2
+    },
+    {
+        "id": "inq-36", "productId": "p71", "productName": "Hand-Thrown Earthen Water Matka with Brass Spigot & Lid",
+        "artisanId": "artisan-34", "buyerId": "buyer-31", "buyerName": "Nalini Sundaram", "buyerOrg": "Ecosphere Lifestyle Goods",
+        "quantity": 50, "targetPrice": 750, "timeline": "3 weeks",
+        "notes": "Summer natural living campaign in Bengaluru. Pre-tested food grade brass faucets.",
+        "status": "Accepted", "daysAgo": 13
+    },
+    {
+        "id": "inq-37", "productId": "p73", "productName": "Warli Tarpa Dance Tribal Folk Painting on Ochre Mud Canvas",
+        "artisanId": "artisan-35", "buyerId": "buyer-15", "buyerName": "Aditya Sengupta", "buyerOrg": "Bharat Décor Collective",
+        "quantity": 25, "targetPrice": 2600, "timeline": "3 weeks",
+        "notes": "Office interior packages for tech startups in Noida and Gurgaon.",
+        "status": "Responded", "daysAgo": 3
+    },
+    {
+        "id": "inq-38", "productId": "p75", "productName": "Authentic Handcrafted Vegetable-Tanned Leather Kolhapuri Chappal",
+        "artisanId": "artisan-36", "buyerId": "buyer-24", "buyerName": "Sudhir Deshmukh", "buyerOrg": "Nagpur Vidarbha Craft Link",
+        "quantity": 60, "targetPrice": 1550, "timeline": "3 weeks",
+        "notes": "Assorted men's sizes 7, 8, 9, 10. Natural vegetable-tanned tan color only.",
+        "status": "Fulfilled", "daysAgo": 24
+    },
+    {
+        "id": "inq-39", "productId": "p77", "productName": "Yeola Handloom Pure Silk Paithani Saree with Peacock Pallu",
+        "artisanId": "artisan-37", "buyerId": "buyer-23", "buyerName": "Parag Zaveri", "buyerOrg": "Surat Silk & Brocade Hub",
+        "quantity": 6, "targetPrice": 22000, "timeline": "6 weeks",
+        "notes": "Bridal boutique inquiry. Bottle green and peacock blue body colors requested.",
+        "status": "Negotiating", "daysAgo": 7
+    },
+    {
+        "id": "inq-40", "productId": "p79", "productName": "Natural Polished Coconut Shell Bowls with Wooden Spoons",
+        "artisanId": "artisan-38", "buyerId": "buyer-26", "buyerName": "Mario D'Souza", "buyerOrg": "Goa Tropical Craft Co.",
+        "quantity": 80, "targetPrice": 620, "timeline": "2 weeks",
+        "notes": "Eco-resort breakfast bowls in North and South Goa beachfront cafes.",
+        "status": "Accepted", "daysAgo": 10
+    },
+    {
+        "id": "inq-41", "productId": "p81", "productName": "Mysore Rosewood Inlay Wall Art Panel — Royal Elephant March",
+        "artisanId": "artisan-39", "buyerId": "buyer-14", "buyerName": "G. S. Balasubramanian", "buyerOrg": "Kaveri Crafts Global",
+        "quantity": 10, "targetPrice": 7800, "timeline": "5 weeks",
+        "notes": "Corporate gifting for state public sector enterprise annual conference.",
+        "status": "Responded", "daysAgo": 2
+    },
+    {
+        "id": "inq-42", "productId": "p83", "productName": "Kinhal GI-Tagged Handcrafted Wooden Kamadhenu Cow & Calf",
+        "artisanId": "artisan-40", "buyerId": "buyer-8", "buyerName": "C. Seshagiri Rao", "buyerOrg": "Deccan Craft Emporium",
+        "quantity": 25, "targetPrice": 1850, "timeline": "3 weeks",
+        "notes": "Housewarming luxury gifting season stock for Jubilee Hills store.",
+        "status": "New", "daysAgo": 1
+    },
+    {
+        "id": "inq-43", "productId": "p85", "productName": "Authentic Aranmula Kannadi Handcrafted Metal Mirror",
+        "artisanId": "artisan-41", "buyerId": "buyer-28", "buyerName": "Padmanabh Kothari", "buyerOrg": "Jaipur Gem & Craft Atelier",
+        "quantity": 4, "targetPrice": 19500, "timeline": "6 weeks",
+        "notes": "Ultra-luxury Indian indigenous metal arts showcase in Jaipur gallery.",
+        "status": "Negotiating", "daysAgo": 9
+    },
+    {
+        "id": "inq-44", "productId": "p87", "productName": "Balaramapuram Kasavu Pure Cotton Handloom Saree",
+        "artisanId": "artisan-42", "buyerId": "buyer-19", "buyerName": "Chef K. M. Joseph", "buyerOrg": "Malabar Heritage Dining",
+        "quantity": 30, "targetPrice": 2850, "timeline": "3 weeks",
+        "notes": "Staff festive ethnic uniform for Onam celebrations at our 4 restaurant properties.",
+        "status": "Accepted", "daysAgo": 12
+    },
+    {
+        "id": "inq-45", "productId": "p89", "productName": "Heirloom Pure Mulberry Silk Kanchipuram Saree",
+        "artisanId": "artisan-43", "buyerId": "buyer-29", "buyerName": "V. S. Raghavan", "buyerOrg": "South India Silk Alliance",
+        "quantity": 8, "targetPrice": 29000, "timeline": "6 weeks",
+        "notes": "Bridal collection wholesale order for T. Nagar flagship showroom.",
+        "status": "Negotiating", "daysAgo": 5
+    },
+    {
+        "id": "inq-46", "productId": "p91", "productName": "Swamimalai Lost-Wax Bronze Nataraja Icon (15-inch)",
+        "artisanId": "artisan-44", "buyerId": "buyer-7", "buyerName": "Debashis Mukherjee", "buyerOrg": "Sanskriti Museum Shop",
+        "quantity": 2, "targetPrice": 33000, "timeline": "8 weeks",
+        "notes": "Temple arts heritage installation. Complete casting provenance and alloy certificate required.",
+        "status": "Accepted", "daysAgo": 16
+    },
+    {
+        "id": "inq-47", "productId": "p93", "productName": "Machilipatnam Hand-Block Printed Kalamkari Cotton Bedspread",
+        "artisanId": "artisan-45", "buyerId": "buyer-3", "buyerName": "Karthik Ramanathan", "buyerOrg": "CraftBasket Retail Stores",
+        "quantity": 45, "targetPrice": 2450, "timeline": "4 weeks",
+        "notes": "Eco bed linen promotion across Karnataka stores. Pre-shrunk cotton verification required.",
+        "status": "Fulfilled", "daysAgo": 21
+    },
+    {
+        "id": "inq-48", "productId": "p95", "productName": "Etikoppaka Non-Toxic Lacquered Wooden Spinning Tops",
+        "artisanId": "artisan-46", "buyerId": "buyer-3", "buyerName": "Karthik Ramanathan", "buyerOrg": "CraftBasket Retail Stores",
+        "quantity": 150, "targetPrice": 320, "timeline": "2 weeks",
+        "notes": "Eco toy gift packs for children's festival promotion across stores.",
+        "status": "Accepted", "daysAgo": 8
+    },
+    {
+        "id": "inq-49", "productId": "p97", "productName": "Pochampally Handloom Pure Silk Double Ikat Saree",
+        "artisanId": "artisan-47", "buyerId": "buyer-8", "buyerName": "C. Seshagiri Rao", "buyerOrg": "Deccan Craft Emporium",
+        "quantity": 15, "targetPrice": 12200, "timeline": "4 weeks",
+        "notes": "Handloom week feature in Hyderabad. Silk Mark certified label attached.",
+        "status": "Responded", "daysAgo": 2
+    },
+    {
+        "id": "inq-50", "productId": "p99", "productName": "Assam Golden Muga Silk Mekhela Chador with Traditional Motifs",
+        "artisanId": "artisan-48", "buyerId": "buyer-10", "buyerName": "Pranab Baruah", "buyerOrg": "Brahmaputra Green Living",
+        "quantity": 5, "targetPrice": 27000, "timeline": "6 weeks",
+        "notes": "Bihu festival premier collection in Guwahati showroom. Traditional red meenakar pattern.",
+        "status": "Negotiating", "daysAgo": 6
+    },
+    {
+        "id": "inq-51", "productId": "p101", "productName": "Tripura Bamboo Fine-Weave Handcrafted Fruit Basket",
+        "artisanId": "artisan-49", "buyerId": "buyer-10", "buyerName": "Pranab Baruah", "buyerOrg": "Brahmaputra Green Living",
+        "quantity": 100, "targetPrice": 540, "timeline": "3 weeks",
+        "notes": "Organic kitchenware line. Smoke-treated against fungal damage.",
+        "status": "Accepted", "daysAgo": 11
+    },
+    {
+        "id": "inq-52", "productId": "p103", "productName": "Hand-Braided Kauna Water Reed Picnic Tote Bag",
+        "artisanId": "artisan-50", "buyerId": "buyer-31", "buyerName": "Nalini Sundaram", "buyerOrg": "Ecosphere Lifestyle Goods",
+        "quantity": 60, "targetPrice": 1100, "timeline": "3 weeks",
+        "notes": "Eco-friendly market bags for urban zero-plastic grocery shoppers in Bangalore.",
+        "status": "Viewed", "daysAgo": 1
+    },
+    {
+        "id": "inq-53", "productId": "p105", "productName": "Hand-Carved Naga Hardwood Ceremonial Drinking Cup",
+        "artisanId": "artisan-51", "buyerId": "buyer-7", "buyerName": "Debashis Mukherjee", "buyerOrg": "Sanskriti Museum Shop",
+        "quantity": 30, "targetPrice": 1550, "timeline": "4 weeks",
+        "notes": "Northeastern tribal culture gallery display and sales in Kolkata.",
+        "status": "Responded", "daysAgo": 4
+    },
+    {
+        "id": "inq-54", "productId": "p108", "productName": "Bastar Handcrafted Wrought Iron Tree with 5 T-Lite Diyas",
+        "artisanId": "artisan-52", "buyerId": "buyer-30", "buyerName": "Manish Bhagat", "buyerOrg": "Bastar Tribal Heritage Foundation",
+        "quantity": 40, "targetPrice": 1280, "timeline": "2 weeks",
+        "notes": "Tribal artisan empowerment gala dinner gifting in Raipur and Ranchi.",
+        "status": "Closed", "daysAgo": 30
+    }
+]
+
+# 8 Curated SIH Demo Scenarios
+DEMO_SCENARIOS = [
+    {
+        "id": "scenario-1",
+        "title": "Mithila Heritage Folk Art — GI Certified",
+        "subtitle": "Savita Devi (Madhubani, Bihar) ↔ Ananya Home Collective (Delhi)",
+        "artisanId": "artisan-1",
+        "artisanName": "Savita Devi",
+        "craft": "Madhubani Painting",
+        "buyerId": "buyer-1",
+        "buyerName": "Ananya Sharma",
+        "buyerOrg": "Ananya Home Collective",
+        "productId": "p1",
+        "productName": "Hand-Painted Madhubani Folk Art (Tree of Life)",
+        "inquiryId": "inq-2",
+        "pitch": "Demonstrates authentic GI-certified folk painting on handmade bamboo paper with natural plant pigments. Showcases deterministic pricing for 40 units/month capacity with volume discounts and buyer matching.",
+        "suggestedQuestions": [
+            "Savita Devi ki monthly capacity aur revenue kitna hai?",
+            "Can I order 50 units of Madhubani wall art with wholesale pricing?",
+            "What natural pigments are used in this painting?",
+            "What is the floor price below which the artisan will lose money?"
+        ],
+        "keyHighlights": [
+            "GI Tag: GI-AU-2018-8421 certified",
+            "Pehchan ID: BR-MAD-PNT-4402 verified",
+            "Deterministic cost breakdown: ₹2,370 total cost, ₹3,150 suggested price",
+            "B2B Wholesale tiers protecting minimum profit floor of 25%"
+        ]
+    },
+    {
+        "id": "scenario-2",
+        "title": "Jharkhand Tribal Lost-Wax Metallurgy",
+        "subtitle": "Meena Kumari (Ranchi, Jharkhand) ↔ CraftBasket Retail (Bengaluru)",
+        "artisanId": "artisan-4",
+        "artisanName": "Meena Kumari",
+        "craft": "Dokra Metal Craft",
+        "buyerId": "buyer-3",
+        "buyerName": "Karthik Ramanathan",
+        "buyerOrg": "CraftBasket Retail Stores",
+        "productId": "p8",
+        "productName": "Tribal Dokra Brass Elephant Figurine",
+        "inquiryId": "inq-1",
+        "pitch": "Showcases 4,000-year-old Cire Perdue lost-wax hollow casting by tribal women in Jharkhand. Demonstrates capacity alerts when bulk buyer orders (100 units) test monthly artisan capacity (80 units).",
+        "suggestedQuestions": [
+            "Agar buyer 120 units ka order de toh artisan kitne din mein deliver karegi?",
+            "Is Dokra metal craft GI tagged?",
+            "Dokra elephant ka raw material cost aur profit margin kitna hai?",
+            "How does Karigar Saathi advise phased fulfillment for high volume B2B orders?"
+        ],
+        "keyHighlights": [
+            "Capacity mismatch detection with smart phased fulfillment warning",
+            "Recycled bell metal alloy casting",
+            "Pehchan ID: JH-RAN-MET-6105",
+            "B2B tier pricing with volume discount capped at 12%"
+        ]
+    },
+    {
+        "id": "scenario-3",
+        "title": "Moradabad High-Volume Brass Festive Gifting",
+        "subtitle": "Vijay Kumar Rastogi (Moradabad, UP) ↔ Traditional India Corporate Gifts (Gurugram)",
+        "artisanId": "artisan-26",
+        "artisanName": "Vijay Kumar Rastogi",
+        "craft": "Brass Engraving",
+        "buyerId": "buyer-5",
+        "buyerName": "Suresh Singhal",
+        "buyerOrg": "Traditional India Corporate Gifts",
+        "productId": "p55",
+        "productName": "Moradabadi Handcrafted Brass Peacock Diya Set",
+        "inquiryId": "inq-4",
+        "pitch": "Demonstrates industrial-scale handicraft manufacturing in India's Brass City (Peetal Nagri) capable of fulfilling 250+ unit corporate Diwali orders with tiered B2B pricing and GST compliance.",
+        "suggestedQuestions": [
+            "Moradabad brass diya set ka bulk price for 250 units kya hoga?",
+            "Is Vijay Kumar Rastogi's GSTIN and Bank account verified?",
+            "Corporate gifting ke liye packaging aur custom branding support hai?",
+            "How much profit does the artisan make on an order of 250 sets?"
+        ],
+        "keyHighlights": [
+            "High monthly capacity: 250 sets/month",
+            "Large corporate transaction: ₹5,12,500 total value",
+            "Verified GSTIN: 09CCCPR8901L1Z8",
+            "Deterministic 4-tier volume discount structure"
+        ]
+    },
+    {
+        "id": "scenario-4",
+        "title": "Varanasi Bridal Heritage — Pure Katan Silk",
+        "subtitle": "Rameshwar Devi (Varanasi, UP) ↔ Roots & Loom Global Exports (Gurugram)",
+        "artisanId": "artisan-23",
+        "artisanName": "Rameshwar Devi",
+        "craft": "Banarasi Handloom Weaving",
+        "buyerId": "buyer-12",
+        "buyerName": "Rohit Malhotra",
+        "buyerOrg": "Roots & Loom Global Exports",
+        "productId": "p48",
+        "productName": "Pure Katan Silk Banarasi Saree with Kadwa Zari",
+        "inquiryId": "inq-3",
+        "pitch": "Demonstrates luxury heirloom textile weaving involving 96 hours of pit-loom labor and pure gold/silver Kadwa zari. Sourced for international export exhibition in London.",
+        "suggestedQuestions": [
+            "Kadwa zari Banarasi saree banane mein kitne ghante lagte hain?",
+            "What makes Kadwa weave superior to machine jacquard?",
+            "What is the export pricing for 15 Banarasi sarees?",
+            "Does Karigar Saathi provide provenance authenticity documentation?"
+        ],
+        "keyHighlights": [
+            "Luxury Price Bracket: ₹28,500 suggested price",
+            "96 hours of artisan handloom labor per piece",
+            "Silk Mark and GI Tag: GI-AU-2015-1102 certified",
+            "International export packaging standards"
+        ]
+    },
+    {
+        "id": "scenario-5",
+        "title": "Jaipur Blue Pottery Heritage Décor",
+        "subtitle": "Ramswaroop Sharma (Jaipur, Rajasthan) ↔ Ananya Home Collective (Delhi)",
+        "artisanId": "artisan-12",
+        "artisanName": "Ramswaroop Sharma",
+        "craft": "Blue Pottery",
+        "buyerId": "buyer-1",
+        "buyerName": "Ananya Sharma",
+        "buyerOrg": "Ananya Home Collective",
+        "productId": "p25",
+        "productName": "Jaipur Traditional Blue Pottery Decorative Wall Plate",
+        "inquiryId": "inq-5",
+        "pitch": "Showcases Jaipur's clay-free quartz pottery glazed in traditional Persian cobalt blue. Demonstrates AI Studio theme recomposition into modern minimalist luxury apartments.",
+        "suggestedQuestions": [
+            "Blue Pottery mein mitti (clay) kyun nahi use hoti?",
+            "Can this plate be customized with corporate logos?",
+            "What is the transit packaging method for fragile pottery?",
+            "AI Studio mein is product ko Modern Minimalist theme mein kaise dekhein?"
+        ],
+        "keyHighlights": [
+            "Unique clay-free quartz and glass powder recipe",
+            "GI Tag: GI-AU-2016-5412 certified",
+            "AI Studio 7-theme instant canvas recomposition",
+            "Direct B2B compatibility match score: 96%"
+        ]
+    },
+    {
+        "id": "scenario-6",
+        "title": "Kashmiri Hand-Carved Walnut Wood Boxes",
+        "subtitle": "Abdul Rahman (Srinagar, J&K) ↔ Traditional India Corporate Gifts (Gurugram)",
+        "artisanId": "artisan-30",
+        "artisanName": "Abdul Rahman",
+        "craft": "Walnut Wood Carving",
+        "buyerId": "buyer-5",
+        "buyerName": "Suresh Singhal",
+        "buyerOrg": "Traditional India Corporate Gifts",
+        "productId": "p63",
+        "productName": "Hand-Carved Kashmiri Walnut Wood Box with Chinar Relief",
+        "inquiryId": "inq-6",
+        "pitch": "Demonstrates master deep-relief wood carving on seasoned Kashmiri walnut wood by master craftsmen from downtown Srinagar for luxury corporate keepsakes.",
+        "suggestedQuestions": [
+            "Kashmiri walnut wood carving ki speciality kya hai?",
+            "How does Karigar Saathi calculate walnut wood seasoning and labour cost?",
+            "What is the wholesale discount on 40 walnut wood boxes?",
+            "Is the wood sustainably sourced and certified?"
+        ],
+        "keyHighlights": [
+            "30-year seasoned native walnut timber",
+            "Master relief carving taking 10 hours per piece",
+            "Floor price protected at ₹3,470 total cost",
+            "GI Tag: GI-AU-2017-9104 certified"
+        ]
+    },
+    {
+        "id": "scenario-7",
+        "title": "Bastar Tribal Wrought Iron (Loha Shilp)",
+        "subtitle": "Dhaniram Kashyap (Kondagaon, CG) ↔ Sanskriti Museum Shop (Kolkata)",
+        "artisanId": "artisan-52",
+        "artisanName": "Dhaniram Kashyap",
+        "craft": "Bastar Wrought Iron (Loha Shilp)",
+        "buyerId": "buyer-7",
+        "buyerName": "Debashis Mukherjee",
+        "buyerOrg": "Sanskriti Museum Shop",
+        "productId": "p107",
+        "productName": "Bastar Hand-Forged Wrought Iron Deer Figurine (Pair)",
+        "inquiryId": "inq-7",
+        "pitch": "Showcases authentic tribal metallurgy using heated scrap iron hand-forged without welds or castings into exquisite elongated animal sculptures.",
+        "suggestedQuestions": [
+            "Bastar Loha Shilp bina welding ke kaise banate hain?",
+            "Can Bastar artisans scale up to supply museum shops across India?",
+            "What is the rust-prevention treatment applied to the wrought iron?",
+            "How does the compatibility match evaluate logistics from Bastar to Kolkata?"
+        ],
+        "keyHighlights": [
+            "100% recycled scrap metal eco-metallurgy",
+            "Ancient blacksmith forge technique",
+            "GI Tag: GI-AU-2018-7201 certified",
+            "Museum shop compatibility match score: 92%"
+        ]
+    },
+    {
+        "id": "scenario-8",
+        "title": "Kullu Handwoven Pure Merino Wool Shawls",
+        "subtitle": "Prem Chand (Kullu, HP) ↔ Himalayan Craft & Pine (Chandigarh)",
+        "artisanId": "artisan-29",
+        "artisanName": "Prem Chand",
+        "craft": "Kullu Handwoven Shawls",
+        "buyerId": "buyer-18",
+        "buyerName": "Capt. Alok Bakshi",
+        "buyerOrg": "Himalayan Craft & Pine",
+        "productId": "p61",
+        "productName": "Pure Merino Wool Kullu Shawl with Traditional Geometric Border",
+        "inquiryId": "inq-8",
+        "pitch": "Demonstrates certified cold-climate handloom weaving from Himachal Pradesh with traditional Himalayan geometric dovetail patterns for boutique resort stores.",
+        "suggestedQuestions": [
+            "Kullu shawl mein handloom mark aur GI certification kaise verify hoti hai?",
+            "What is the lead time for a 60-unit pre-winter retail order?",
+            "How does Karigar Saathi handle logistics costs from Kullu to Chandigarh?",
+            "What are the profit margins for weavers in Kullu cooperatives?"
+        ],
+        "keyHighlights": [
+            "Pure fine merino wool (Australian origin combed yarn)",
+            "GI Tag: GI-AU-2014-4109 certified",
+            "45 units/month cooperative capacity",
+            "94% trust and compliance score"
+        ]
+    }
+]
+
+print(f"Loaded Inquiries: {len(INQUIRIES_CONFIG)}, Scenarios: {len(DEMO_SCENARIOS)}")

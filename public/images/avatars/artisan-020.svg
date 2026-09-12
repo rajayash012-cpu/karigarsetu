@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_artisan-020" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="skin_artisan-020" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="28" fill="url(#bg_artisan-020)"/>
+  <!-- Geometric Craft Frame in Background -->
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.3" stroke-dasharray="6,4"/>
+  <circle cx="100" cy="100" r="74" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.2"/>
+  <!-- Kurta & Nehru Jacket / Shoulders -->
+  <path d="M30,200 C30,140 60,132 100,132 C140,132 170,140 170,200 Z" fill="#fffbeb"/>
+  <!-- Vest / Waistcoat -->
+  <path d="M45,200 C45,150 70,140 85,140 L85,200 Z" fill="#78350f"/>
+  <path d="M155,200 C155,150 130,140 115,140 L115,200 Z" fill="#78350f"/>
+  <!-- Neck & Strong Jawline Face -->
+  <rect x="88" y="112" width="24" height="28" rx="6" fill="url(#skin_artisan-020)"/>
+  <ellipse cx="100" cy="85" rx="35" ry="41" fill="url(#skin_artisan-020)"/>
+  <!-- Male Traditional Haircut -->
+  <path d="M65,74 C63,42 78,36 100,36 C122,36 137,42 135,74 C128,52 116,46 100,46 C84,46 72,52 65,74 Z" fill="#18181b"/>
+  <!-- Eyebrows & Eyes -->
+  <path d="M78,73 Q85,70 92,73" stroke="#18181b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M108,73 Q115,70 122,73" stroke="#18181b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <ellipse cx="85" cy="81" rx="3.5" ry="3.5" fill="#18181b"/>
+  <ellipse cx="115" cy="81" rx="3.5" ry="3.5" fill="#18181b"/>
+  <!-- Tilak / Mark -->
+  <rect x="98" y="60" width="4" height="10" rx="2" fill="#f59e0b"/>
+  <!-- Mustache -->
+  <path d="M84,97 Q100,94 100,101 Q100,94 116,97 Q124,103 118,105 Q100,102 100,106 Q100,102 82,105 Q76,103 84,97 Z" fill="#18181b"/>
+  <!-- Name Label Plate -->
+  <rect x="12" y="168" width="176" height="24" rx="6" fill="#0f172a" fill-opacity="0.92"/>
+  <text x="100" y="184" font-family="sans-serif" font-size="9" font-weight="bold" fill="#fbbf24" text-anchor="middle">👨 SANJAY VERMA</text>
+</svg>

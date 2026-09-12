@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg_artisan-032" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="skin_artisan-032" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="28" fill="url(#bg_artisan-032)"/>
+  <!-- Decorative Mandala Ring in Background -->
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.3" stroke-dasharray="5,4"/>
+  <circle cx="100" cy="100" r="74" fill="none" stroke="#60a5fa" stroke-width="1" opacity="0.2"/>
+  <!-- Saree Drape / Shoulders -->
+  <path d="M30,200 C30,140 60,132 100,132 C140,132 170,140 170,200 Z" fill="#eff6ff"/>
+  <!-- Saree Pallu / Zari Border -->
+  <path d="M40,150 Q75,135 110,200" stroke="#1d4ed8" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M40,150 Q75,135 110,200" stroke="#facc15" stroke-width="2" fill="none" stroke-dasharray="3,3"/>
+  <!-- Neck & Face -->
+  <rect x="88" y="112" width="24" height="28" rx="6" fill="url(#skin_artisan-032)"/>
+  <ellipse cx="100" cy="86" rx="34" ry="40" fill="url(#skin_artisan-032)"/>
+  <!-- Traditional Indian Female Hair (Soft Bun with Flowers) -->
+  <path d="M64,80 C62,48 76,40 100,40 C124,40 138,48 136,80 C130,56 118,50 100,50 C82,50 70,56 64,80 Z" fill="#18181b"/>
+  <!-- Small Jhumka Earrings -->
+  <circle cx="64" cy="94" r="3.5" fill="#facc15"/>
+  <circle cx="136" cy="94" r="3.5" fill="#facc15"/>
+  <!-- Eyes & Eyebrows -->
+  <path d="M78,75 Q85,71 92,75" stroke="#18181b" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M108,75 Q115,71 122,75" stroke="#18181b" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <ellipse cx="85" cy="83" rx="3.5" ry="3.5" fill="#18181b"/>
+  <ellipse cx="115" cy="83" rx="3.5" ry="3.5" fill="#18181b"/>
+  <!-- Red Bindi -->
+  <circle cx="100" cy="72" r="3" fill="#dc2626"/>
+  <!-- Gentle Smile -->
+  <path d="M90,102 Q100,110 110,102" stroke="#991b1b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Name Label Plate -->
+  <rect x="12" y="168" width="176" height="24" rx="6" fill="#0f172a" fill-opacity="0.92"/>
+  <text x="100" y="184" font-family="sans-serif" font-size="9" font-weight="bold" fill="#60a5fa" text-anchor="middle">👩 KAMALA DAS</text>
+</svg>
