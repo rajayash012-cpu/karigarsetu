@@ -96,7 +96,7 @@ async function runTests() {
   // Test 6: Full Studio Enhancement Pipeline
   try {
     const result = await enhanceStudioProduct(sampleProductBuffer, 'terracotta_pot_test.png', 'indian_heritage');
-    assert(result.status === undefined || result.id.startsWith('enh_'), 'Test 6: Full Studio pipeline returns valid result ID');
+    assert(Boolean(result.id && result.id.startsWith('enh_')), 'Test 6: Full Studio pipeline returns valid result ID');
     assert(Boolean(result.cutoutUrl), 'Test 7: Studio pipeline generates and stores cutout PNG URL');
     assert(Boolean(result.enhancedUrl), 'Test 8: Studio pipeline generates enhanced theme composite URL');
     assert(Object.keys(result.themeOutputs).length === 7, 'Test 9: Studio pipeline outputs all 7 theme variations');

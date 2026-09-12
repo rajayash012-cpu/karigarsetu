@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import QRCode from 'qrcode';
-import { store, saveStore } from '../store.js';
+import { store, saveStore, type InquiryData } from '../store.js';
 
 const router = Router();
 
@@ -627,13 +627,16 @@ router.post('/inquiry/create', (req, res) => {
   
   const targetProduct = store.products.find(p => p.id === productId);
 
-  const inquiry = {
+  const inquiry: InquiryData = {
     id: `inquiry-${Date.now()}`,
     productId: productId || (targetProduct ? targetProduct.id : "p1"),
     productName: targetProduct ? (targetProduct.titleEn || targetProduct.name) : "Handcrafted Artisan Product",
+    artisanId: targetProduct ? (targetProduct.artisanId || "artisan-001") : "artisan-001",
+    buyerId: "buyer-001",
     buyerName: buyerName || "Verified B2B Buyer",
     buyerOrg: buyerOrg || "Heritage Retail Collective",
     quantity: Number(quantity) || 25,
+    targetPrice: targetProduct ? (targetProduct.price || 1200) : 1200,
     timeline: timeline || "3 to 4 weeks",
     notes: notes || "Interested in bulk procurement sample and wholesale pricing tier.",
     status: "received",

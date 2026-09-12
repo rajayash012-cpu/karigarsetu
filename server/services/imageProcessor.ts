@@ -73,7 +73,7 @@ export class RealImageAIProvider implements ImageEnhancementProvider {
     if (prKey && !prKey.startsWith('demo_')) {
       try {
         const formData = new FormData();
-        const blob = new Blob([imageBuffer], { type: 'image/jpeg' });
+        const blob = new Blob([imageBuffer as any], { type: 'image/jpeg' });
         formData.append('image_file', blob);
 
         const response = await fetch('https://sdk.photoroom.com/v1/segment', {

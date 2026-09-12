@@ -104,7 +104,7 @@ async function runDataConsistencyTests() {
   });
   assert(allInquiriesValid, 'Every inquiry references a valid Artisan and valid Buyer');
 
-  const lifecycleStages = new Set(inquiries.map(i => i.status));
+  const lifecycleStages = new Set<string>(inquiries.map(i => i.status));
   const expectedStages = ['New', 'Viewed', 'Responded', 'Negotiating', 'Accepted', 'Fulfilled', 'Closed'];
   const allStagesPresent = expectedStages.every(stage => lifecycleStages.has(stage));
   assert(allStagesPresent, `All 7 inquiry lifecycle stages represented (${Array.from(lifecycleStages).join(', ')})`);

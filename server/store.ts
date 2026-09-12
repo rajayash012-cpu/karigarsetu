@@ -63,10 +63,24 @@ export interface MarketMatchData {
   minUnits: number;
   maxUnits: number;
   compatibilityScore: number;
+  scoreBreakdown?: {
+    craftMatch: number;
+    capacityCompatibility: number;
+    priceAlignment: number;
+    logisticsCorridor: number;
+  };
   craftMatch: boolean;
   volumeCompatible: boolean;
   capacityWarning?: string;
+  capacityMismatchWarning?: string;
   logisticsRoute: string;
+  logisticsCorridor?: {
+    route: string;
+    estimatedDays: number;
+    freightBand: string;
+  };
+  recommendedInquiryQuantity?: number;
+  estimatedOrderValue?: number;
   recommendedAction: string;
   status: 'matched' | 'inquired' | 'connected';
   isDemoData: boolean;

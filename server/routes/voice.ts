@@ -112,7 +112,7 @@ Important:
     if (groqKey && groqKey.trim() !== '') {
       try {
         const formData = new FormData();
-        const blob = new Blob([file.buffer], { type: file.mimetype || 'audio/webm' });
+        const blob = new Blob([file.buffer as any], { type: file.mimetype || 'audio/webm' });
         formData.append('file', blob, 'audio.webm');
         formData.append('model', 'whisper-large-v3');
         formData.append('language', language.split('-')[0]);
