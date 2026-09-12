@@ -259,11 +259,14 @@ export default function KarigarSaathi() {
 
         if (audioBlob.size > 800) {
           try {
-            // Priority 1: Free Unlimited Puter.js STT (OpenAI Whisper)
+            // Priority 1: Free Unlimited Puter.js STT (gpt-4o-mini-transcribe)
             const targetLang = isHi ? 'hi-IN' : 'en-IN';
-            const puterRes = await transcribeWithPuter(audioBlob, targetLang);
+            const puterRes = await transcribeWithPuter(audioBlob, {
+              model: 'gpt-4o-mini-transcribe',
+              language: targetLang
+            });
             if (puterRes.success && puterRes.text.trim()) {
-              console.log('[Puter STT Assistant] Transcribed:', puterRes.text);
+              console.log(`[Puter STT Assistant] Transcribed (${puterRes.modelUsed}):`, puterRes.text);
               setInputText(puterRes.text.trim());
               handleSendMessage(puterRes.text.trim());
               setIsRecording(false);

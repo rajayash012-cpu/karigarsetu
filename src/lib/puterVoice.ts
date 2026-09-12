@@ -1,10 +1,20 @@
 /**
  * Puter.js Free, Unlimited Speech-to-Text Integration
- * Based on Puter AI Speech-to-Text: https://developer.puter.com/tutorials/free-unlimited-speech-to-text-api/
+ * Official Documentation: https://developer.puter.com/tutorials/free-unlimited-speech-to-text-api/
  * 
- * Provides free, unlimited transcription powered by OpenAI Whisper and GPT-4o Transcribe models
- * without requiring any API keys or billing.
+ * Free, unlimited, keyless Speech-to-Text powered by Puter.js.
+ * - Default Model: 'gpt-4o-mini-transcribe' (fast interactive voice-input)
+ * - Configurable Model: 'gpt-4o-transcribe' (higher precision) or 'whisper-1'
+ * - Zero API key / zero backend proxy requirement.
+ * - Native File / Blob handling.
+ * - Multilingual verbatim transcription (preserves user's spoken language without forced translation).
  */
+
+import puter from '@heyputer/puter.js';
+
+export type PuterSTTModel = 'gpt-4o-mini-transcribe' | 'gpt-4o-transcribe' | 'whisper-1';
+
+export const DEFAULT_STT_MODEL: PuterSTTModel = 'gpt-4o-mini-transcribe';
 
 declare global {
   interface Window {
@@ -22,46 +32,45 @@ declare global {
 }
 
 /**
- * Ensures Puter.js is loaded in the browser
+ * Ensures Puter instance is initialized in the browser environment
  */
-export async function ensurePuterLoaded(): Promise<boolean> {
-  if (typeof window === 'undefined') return false;
-
-  if (window.puter?.ai?.speech2txt) {
-    return true;
+export async function getPuterInstance(): Promise<any> {
+  if (typeof window !== 'undefined' && window.puter?.ai?.speech2txt) {
+    return window.puter;
   }
 
-  // If script is not yet present, inject it dynamically
-  return new Promise((resolve) => {
+  if (puter?.ai?.speech2txt) {
+    return puter;
+  }
+
+  // Fallback: Dynamically ensure official script is loaded if not already ready
+  if (typeof window !== 'undefined') {
     const existing = document.querySelector('script[src*="js.puter.com"]');
-    if (existing) {
-      existing.addEventListener('load', () => resolve(!!window.puter?.ai?.speech2txt));
-      existing.addEventListener('error', () => resolve(false));
-      // In case it already loaded
-      if (window.puter?.ai?.speech2txt) return resolve(true);
-      setTimeout(() => resolve(!!window.puter?.ai?.speech2txt), 2500);
-      return;
+    if (!existing) {
+      const script = document.createElement('script');
+      script.src = 'https://js.puter.com/v2/';
+      script.async = true;
+      document.head.appendChild(script);
+      await new Promise((resolve) => {
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        setTimeout(() => resolve(false), 2000);
+      });
     }
 
-    const script = document.createElement('script');
-    script.src = 'https://js.puter.com/v2/';
-    script.async = true;
-    script.onload = () => {
-      console.log('[Puter.js] Speech-to-Text library loaded successfully');
-      resolve(!!window.puter?.ai?.speech2txt);
-    };
-    script.onerror = (err) => {
-      console.warn('[Puter.js] Failed to load library script:', err);
-      resolve(false);
-    };
-    document.head.appendChild(script);
-  });
+    if (window.puter?.ai?.speech2txt) {
+      return window.puter;
+    }
+  }
+
+  return puter;
 }
 
 /**
- * Maps full locale (e.g. 'hi-IN', 'bn-IN') to ISO 639-1 code ('hi', 'bn') for Whisper
+ * Normalizes language locale to ISO 639-1 code hint (e.g. 'hi-IN' -> 'hi')
  */
 export function mapLanguageToIso(lang: string = 'hi-IN'): string {
+  if (!lang) return 'hi';
   const code = lang.split('-')[0].toLowerCase();
   const validIsoCodes: Record<string, string> = {
     hi: 'hi', // Hindi
@@ -77,101 +86,117 @@ export function mapLanguageToIso(lang: string = 'hi-IN'): string {
     or: 'or', // Odia
     ur: 'ur'  // Urdu
   };
-  return validIsoCodes[code] || 'hi';
+  return validIsoCodes[code] || code;
 }
 
 export interface PuterTranscriptionResult {
   success: boolean;
   text: string;
-  provider: 'puter-whisper' | 'puter-gpt4o' | 'backend-fallback' | 'failed';
+  modelUsed: PuterSTTModel | 'default';
   error?: string;
 }
 
+export interface PuterTranscriptionOptions {
+  model?: PuterSTTModel;
+  language?: string;
+}
+
 /**
- * Transcribes audio recording using Puter's Free, Unlimited Speech-to-Text API.
- * Uses OpenAI Whisper-1 model first, with fallback to gpt-4o-mini-transcribe.
+ * Transcribes an audio recording using Puter.js Speech-to-Text.
+ * Passes the browser File or Blob directly to puter.ai.speech2txt().
  * 
- * @param audioBlob - The recorded audio Blob or File from MediaRecorder
- * @param language - Target language tag (e.g. 'hi-IN', 'en-IN')
+ * @param audioFile - Browser File or Blob from MediaRecorder
+ * @param options - Configuration options (model, language hint) or a language string (e.g. 'hi-IN')
  */
 export async function transcribeWithPuter(
-  audioBlob: Blob | File,
-  language: string = 'hi-IN'
+  audioFile: Blob | File,
+  options?: PuterTranscriptionOptions | string
 ): Promise<PuterTranscriptionResult> {
-  const isLoaded = await ensurePuterLoaded();
-  if (!isLoaded || !window.puter?.ai?.speech2txt) {
-    console.warn('[Puter STT] Puter.js is not available in current environment');
+  const opts: PuterTranscriptionOptions = typeof options === 'string' ? { language: options } : (options || {});
+  const modelToUse: PuterSTTModel = opts.model || DEFAULT_STT_MODEL;
+  const isoLang = mapLanguageToIso(opts.language || 'hi-IN');
+
+  // Guard against empty / truncated audio
+  if (!audioFile || audioFile.size < 500) {
     return {
       success: false,
       text: '',
-      provider: 'failed',
-      error: 'Puter library not initialized'
+      modelUsed: modelToUse,
+      error: 'Audio recording is empty or too short.'
     };
   }
 
-  const isoLang = mapLanguageToIso(language);
-  console.log(`[Puter STT] Initiating transcription with language hint: ${isoLang}, audio size: ${audioBlob.size} bytes`);
-
-  // Attempt 1: OpenAI Whisper via Puter.js
   try {
-    const result = await window.puter.ai.speech2txt(audioBlob, {
-      model: 'whisper-1',
-      language: isoLang,
-      response_format: 'json'
-    });
-
-    const text = (typeof result === 'string' ? result : (result?.text || '')).trim();
-    if (text) {
-      console.log(`[Puter STT] Whisper successfully transcribed: "${text}"`);
-      return {
-        success: true,
-        text,
-        provider: 'puter-whisper'
-      };
+    const puterInstance = await getPuterInstance();
+    if (!puterInstance?.ai?.speech2txt) {
+      throw new Error('Puter Speech-to-Text library is not initialized.');
     }
-  } catch (err: any) {
-    console.warn('[Puter STT] Whisper attempt error:', err?.message || err);
-  }
 
-  // Attempt 2: gpt-4o-mini-transcribe via Puter.js
-  try {
-    const result = await window.puter.ai.speech2txt(audioBlob, {
-      model: 'gpt-4o-mini-transcribe',
+    console.log(`[Puter STT] Transcribing ${audioFile.size} bytes using model: ${modelToUse}, lang hint: ${isoLang}`);
+
+    // PRIMARY ATTEMPT: Specified model (defaults to gpt-4o-mini-transcribe for fast interactive voice input)
+    // IMPORTANT: translate is NOT enabled to preserve the user's spoken language verbatim.
+    const result = await puterInstance.ai.speech2txt(audioFile, {
+      model: modelToUse,
       language: isoLang
     });
 
-    const text = (typeof result === 'string' ? result : (result?.text || '')).trim();
-    if (text) {
-      console.log(`[Puter STT] GPT-4o Mini successfully transcribed: "${text}"`);
+    const parsedText = (typeof result === 'string' ? result : (result?.text || '')).trim();
+    if (parsedText) {
+      console.log(`[Puter STT] Successfully transcribed (${modelToUse}): "${parsedText}"`);
       return {
         success: true,
-        text,
-        provider: 'puter-gpt4o'
+        text: parsedText,
+        modelUsed: modelToUse
       };
     }
   } catch (err: any) {
-    console.warn('[Puter STT] GPT-4o Mini attempt error:', err?.message || err);
+    console.warn(`[Puter STT] Primary attempt with ${modelToUse} failed:`, err?.message || err);
   }
 
-  // Attempt 3: Default model invocation
+  // FALLBACK ATTEMPT 1: If gpt-4o-mini-transcribe failed or returned empty, try whisper-1
+  if (modelToUse !== 'whisper-1') {
+    try {
+      const puterInstance = await getPuterInstance();
+      const result = await puterInstance.ai.speech2txt(audioFile, {
+        model: 'whisper-1',
+        language: isoLang
+      });
+
+      const parsedText = (typeof result === 'string' ? result : (result?.text || '')).trim();
+      if (parsedText) {
+        console.log(`[Puter STT] Fallback to whisper-1 succeeded: "${parsedText}"`);
+        return {
+          success: true,
+          text: parsedText,
+          modelUsed: 'whisper-1'
+        };
+      }
+    } catch (whisperErr: any) {
+      console.warn('[Puter STT] Fallback whisper-1 failed:', whisperErr?.message || whisperErr);
+    }
+  }
+
+  // FALLBACK ATTEMPT 2: Bare source invocation
   try {
-    const result = await window.puter.ai.speech2txt(audioBlob);
-    const text = (typeof result === 'string' ? result : (result?.text || '')).trim();
-    if (text) {
+    const puterInstance = await getPuterInstance();
+    const result = await puterInstance.ai.speech2txt(audioFile);
+    const parsedText = (typeof result === 'string' ? result : (result?.text || '')).trim();
+    if (parsedText) {
       return {
         success: true,
-        text,
-        provider: 'puter-whisper'
+        text: parsedText,
+        modelUsed: 'default'
       };
     }
-  } catch (err: any) {
-    console.warn('[Puter STT] Bare invocation error:', err?.message || err);
+  } catch (bareErr: any) {
+    console.warn('[Puter STT] Bare speech2txt failed:', bareErr?.message || bareErr);
   }
 
   return {
     success: false,
     text: '',
-    provider: 'failed',
-    error: 'All Puter transcription attempts yielded empty text'
+    modelUsed: modelToUse,
+    error: 'Speech-to-text could not transcribe audio.'
   };
 }

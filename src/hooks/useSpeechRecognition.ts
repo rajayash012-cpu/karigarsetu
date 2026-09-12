@@ -98,10 +98,13 @@ export const useSpeechRecognition = (defaultLang = 'hi-IN') => {
         }
 
         try {
-          // Priority 1: Free Unlimited Puter.js Speech-to-Text (Whisper & GPT-4o)
-          const puterResult = await transcribeWithPuter(blob, lang);
+          // Priority 1: Free Unlimited Puter.js Speech-to-Text (Fast interactive gpt-4o-mini-transcribe)
+          const puterResult = await transcribeWithPuter(blob, {
+            model: 'gpt-4o-mini-transcribe',
+            language: lang
+          });
           if (puterResult.success && puterResult.text) {
-            console.log(`[Puter STT Hook] Recognized via ${puterResult.provider}: "${puterResult.text}"`);
+            console.log(`[Puter STT Hook] Recognized via ${puterResult.modelUsed}: "${puterResult.text}"`);
             const base = baseTextRef.current;
             const updated = base ? `${base} ${puterResult.text}` : puterResult.text;
             setTranscript(updated);

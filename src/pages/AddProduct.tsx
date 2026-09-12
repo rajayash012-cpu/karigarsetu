@@ -298,10 +298,13 @@ export default function AddProduct() {
         }
 
         try {
-          // Priority 1: Free Unlimited Speech-to-Text via Puter.js (Whisper & GPT-4o)
-          const puterResult = await transcribeWithPuter(blob, selectedLang);
+          // Priority 1: Free Unlimited Speech-to-Text via Puter.js (gpt-4o-mini-transcribe)
+          const puterResult = await transcribeWithPuter(blob, { 
+            model: 'gpt-4o-mini-transcribe', 
+            language: selectedLang 
+          });
           if (puterResult.success && puterResult.text) {
-            console.log(`[Puter STT] Voice description transcribed (${puterResult.provider}): "${puterResult.text}"`);
+            console.log(`[Puter STT] Voice description transcribed (${puterResult.modelUsed}): "${puterResult.text}"`);
             const base = baseTextRef.current;
             const updated = base ? `${base} ${puterResult.text}` : puterResult.text;
             setTranscript(updated);
@@ -675,7 +678,7 @@ export default function AddProduct() {
             {voiceState === 'PROCESSING' && (
               <div className="absolute top-2 left-3 right-16 flex items-center gap-2 bg-indigo-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-xs">
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-300" />
-                <span>Converting speech… (आवाज को टेक्स्ट में बदल रहे हैं...)</span>
+                <span>Transcribing with Puter AI… (आवाज को टेक्स्ट में बदल रहे हैं...)</span>
               </div>
             )}
 

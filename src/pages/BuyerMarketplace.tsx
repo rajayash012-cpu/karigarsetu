@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { Header } from '@/components/Header';
@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatCurrency } from '@/lib/utils';
 import { createInquiry } from '@/lib/api';
-import { Search, ShieldCheck, ExternalLink, Sparkles, Package, Layers, CheckCircle2 } from 'lucide-react';
+import { transcribeWithPuter } from '@/lib/puterVoice';
+import { Search, ShieldCheck, ExternalLink, Sparkles, Package, Layers, CheckCircle2, Mic, MicOff, Loader2 } from 'lucide-react';
 
 const DEFAULT_CRAFT_CATEGORIES = [
   'All Crafts',
@@ -57,6 +58,113 @@ export default function BuyerMarketplace() {
   const [requestSample, setRequestSample] = useState(true);
   const [notes, setNotes] = useState('Interested in 25 units wholesale batch. Please include material swatch with sample.');
   const [success, setSuccess] = useState(false);
+
+  // Puter.js Voice Search States (Keyless, Unlimited, GPT-4o-mini-transcribe)
+  const [isVoiceSearching, setIsVoiceSearching] = useState(false);
+  const [isVoiceTranscribing, setIsVoiceTranscribing] = useState(false);
+  const voiceRecorderRef = useRef<MediaRecorder | null>(null);
+  const voiceStreamRef = useRef<MediaStream | null>(null);
+  const voiceChunksRef = useRef<Blob[]>([]);
+
+  // Cleanup microphone on unmount
+  useEffect(() => {
+    return () => {
+      if (voiceStreamRef.current) {
+        try { voiceStreamRef.current.getTracks().forEach(t => t.stop()); } catch (e) {}
+      }
+      if (voiceRecorderRef.current && voiceRecorderRef.current.state !== 'inactive') {
+        try { voiceRecorderRef.current.stop(); } catch (e) {}
+      }
+    };
+  }, []);
+
+  const stopVoiceSearch = () => {
+    if (voiceRecorderRef.current && voiceRecorderRef.current.state !== 'inactive') {
+      try {
+        voiceRecorderRef.current.stop();
+      } catch (e) {}
+    }
+  };
+
+  const startVoiceSearch = async () => {
+    if (isVoiceSearching) {
+      stopVoiceSearch();
+      return;
+    }
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      addToast('Microphone not supported in this browser. Please type your search.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      voiceStreamRef.current = stream;
+      voiceChunksRef.current = [];
+
+      let mimeType = '';
+      if (typeof MediaRecorder !== 'undefined') {
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) mimeType = 'audio/webm;codecs=opus';
+        else if (MediaRecorder.isTypeSupported('audio/webm')) mimeType = 'audio/webm';
+        else if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
+      }
+
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) voiceChunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        setIsVoiceSearching(false);
+        setIsVoiceTranscribing(true);
+
+        if (voiceStreamRef.current) {
+          try { voiceStreamRef.current.getTracks().forEach(t => t.stop()); } catch (e) {}
+          voiceStreamRef.current = null;
+        }
+
+        const chunks = voiceChunksRef.current;
+        const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+        voiceChunksRef.current = [];
+
+        if (blob.size < 800) {
+          setIsVoiceTranscribing(false);
+          return;
+        }
+
+        try {
+          const res = await transcribeWithPuter(blob, {
+            model: 'gpt-4o-mini-transcribe',
+            language: isHi ? 'hi-IN' : 'en-IN'
+          });
+
+          if (res.success && res.text.trim()) {
+            setSearchQuery(res.text.trim());
+            addToast(`✨ Voice recognized: "${res.text.trim()}"`);
+          } else {
+            addToast('Could not transcribe audio. You can type your search.');
+          }
+        } catch (sttErr) {
+          console.error('[Marketplace STT Error]', sttErr);
+          addToast('Speech recognition unavailable. Please type your search.');
+        } finally {
+          setIsVoiceTranscribing(false);
+        }
+      };
+
+      recorder.start(250);
+      voiceRecorderRef.current = recorder;
+      setIsVoiceSearching(true);
+    } catch (err: any) {
+      console.warn('[Marketplace Voice Permission]', err);
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        addToast('Microphone access blocked. Please allow microphone in browser settings.');
+      } else {
+        addToast('Could not access microphone. Please type your search.');
+      }
+      setIsVoiceSearching(false);
+    }
+  };
 
   useEffect(() => {
     fetch('/api/products')
@@ -158,15 +266,44 @@ export default function BuyerMarketplace() {
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative">
+        {/* Search Bar with Puter AI Voice Search */}
+        <div className="relative flex items-center">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Dokra, Madhubani, Walnut Wood, Brass, Silk..." 
-            className="bg-white pl-9 rounded-xl border-slate-200 text-xs shadow-xs" 
+            placeholder={
+              isVoiceSearching 
+                ? (isHi ? 'बोलिए... सुन रहे हैं...' : 'Listening... speak craft or region...')
+                : isVoiceTranscribing
+                ? (isHi ? 'आवाज को टेक्स्ट में बदल रहे हैं...' : 'Transcribing with Puter AI...')
+                : (isHi ? 'खोजें (जैसे: डोकरा, मधुबनी, पीतल, रेशम)...' : 'Search Dokra, Madhubani, Walnut Wood, Brass, Silk...')
+            }
+            className={`bg-white pl-9 pr-11 rounded-xl border-slate-200 text-xs shadow-xs transition-colors ${
+              isVoiceSearching ? 'border-rose-400 ring-2 ring-rose-100' : isVoiceTranscribing ? 'border-indigo-400' : ''
+            }`} 
           />
+          <button
+            type="button"
+            onClick={startVoiceSearch}
+            disabled={isVoiceTranscribing}
+            className={`absolute right-2 p-1.5 rounded-lg text-xs transition-all flex items-center justify-center ${
+              isVoiceSearching
+                ? 'bg-rose-500 text-white animate-pulse shadow-xs'
+                : isVoiceTranscribing
+                ? 'bg-indigo-50 text-indigo-600'
+                : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50'
+            }`}
+            title={isVoiceSearching ? 'Click to stop listening' : 'Puter AI Voice Search (बोलकर खोजें)'}
+          >
+            {isVoiceSearching ? (
+              <MicOff className="w-4 h-4" />
+            ) : isVoiceTranscribing ? (
+              <Loader2 className="w-4 h-4 animate-spin text-indigo-600" />
+            ) : (
+              <Mic className="w-4 h-4" />
+            )}
+          </button>
         </div>
 
         {/* Filter Controls: State & Price Brackets */}
