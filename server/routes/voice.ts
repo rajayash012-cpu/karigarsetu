@@ -133,13 +133,34 @@ Important:
       }
     }
 
+    // Check for Puter token on server if available
+    const puterToken = process.env.PUTER_AUTH_TOKEN;
+    if (puterToken && puterToken.trim() !== '') {
+      try {
+        const puter = (await import('@heyputer/puter.js')).default;
+        puter.setAuthToken(puterToken);
+        const dataUrl = `data:${file.mimetype || 'audio/webm'};base64,${file.buffer.toString('base64')}`;
+        const puterResult = await puter.ai.speech2txt(dataUrl, {
+          model: 'whisper-1',
+          language: language.split('-')[0]
+        });
+        const txt = (typeof puterResult === 'string' ? puterResult : puterResult?.text || '').trim();
+        if (txt) {
+          console.log(`[Speech-to-Text] Puter Server Whisper transcribed: "${txt}"`);
+          return res.json({ success: true, text: txt, provider: 'puter-server' });
+        }
+      } catch (puterErr: any) {
+        console.warn("[Speech-to-Text] Puter Server error:", puterErr.message);
+      }
+    }
+
     // Notice when no cloud API key is configured
-    console.warn(`[Speech-to-Text] Notice: GEMINI_API_KEY is not configured in .env. To enable cloud speech-to-text, add GEMINI_API_KEY to your .env file.`);
+    console.warn(`[Speech-to-Text] Notice: Server cloud STT keys not found. Client Puter.js handles direct free speech-to-text.`);
     return res.status(200).json({
       success: false,
       text: "",
       error: "NO_API_KEY",
-      message: "Speech-to-text requires GEMINI_API_KEY configured in server .env."
+      message: "Server STT requires GEMINI_API_KEY or PUTER_AUTH_TOKEN. Client Puter.js handles direct transcription."
     });
 
   } catch (err: any) {

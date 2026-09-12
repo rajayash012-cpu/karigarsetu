@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { transcribeWithPuter } from '@/lib/puterVoice';
 import { 
   Mic, 
   MicOff, 
@@ -258,9 +259,21 @@ export default function KarigarSaathi() {
 
         if (audioBlob.size > 800) {
           try {
+            // Priority 1: Free Unlimited Puter.js STT (OpenAI Whisper)
+            const targetLang = isHi ? 'hi-IN' : 'en-IN';
+            const puterRes = await transcribeWithPuter(audioBlob, targetLang);
+            if (puterRes.success && puterRes.text.trim()) {
+              console.log('[Puter STT Assistant] Transcribed:', puterRes.text);
+              setInputText(puterRes.text.trim());
+              handleSendMessage(puterRes.text.trim());
+              setIsRecording(false);
+              return;
+            }
+
+            // Priority 2: Fallback to backend /api/speech-to-text
             const formData = new FormData();
             formData.append('audio', audioBlob, 'speech.webm');
-            formData.append('language', isHi ? 'hi-IN' : 'en-IN');
+            formData.append('language', targetLang);
 
             const res = await fetch('/api/speech-to-text', {
               method: 'POST',
@@ -275,7 +288,7 @@ export default function KarigarSaathi() {
               }
             }
           } catch (err) {
-            console.error('Backend speech-to-text failed:', err);
+            console.error('Speech-to-text failed:', err);
           }
         }
         setIsRecording(false);

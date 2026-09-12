@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { transcribeWithPuter } from '@/lib/puterVoice';
 
 export type VoiceState = 'IDLE' | 'RECORDING' | 'PROCESSING' | 'SUCCESS' | 'ERROR';
 
@@ -97,6 +98,22 @@ export const useSpeechRecognition = (defaultLang = 'hi-IN') => {
         }
 
         try {
+          // Priority 1: Free Unlimited Puter.js Speech-to-Text (Whisper & GPT-4o)
+          const puterResult = await transcribeWithPuter(blob, lang);
+          if (puterResult.success && puterResult.text) {
+            console.log(`[Puter STT Hook] Recognized via ${puterResult.provider}: "${puterResult.text}"`);
+            const base = baseTextRef.current;
+            const updated = base ? `${base} ${puterResult.text}` : puterResult.text;
+            setTranscript(updated);
+            transcriptRef.current = updated;
+            baseTextRef.current = updated;
+            setInterimTranscript('');
+            setVoiceState('SUCCESS');
+            setTimeout(() => setVoiceState('IDLE'), 1200);
+            return;
+          }
+
+          // Priority 2: Fallback to Backend Speech-to-Text
           const formData = new FormData();
           formData.append('audio', blob, 'recording.webm');
           formData.append('language', lang);
@@ -124,7 +141,7 @@ export const useSpeechRecognition = (defaultLang = 'hi-IN') => {
             setVoiceState('ERROR');
           }
         } catch (serverErr) {
-          console.error('[Level 2 STT Hook] Error:', serverErr);
+          console.error('[STT Hook] Error:', serverErr);
           setError('Voice typing could not be completed. You can type manually or try again.');
           setVoiceState('ERROR');
         }

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { processProduct } from '@/lib/api';
 import { BackButton } from '@/components/BackButton';
+import { transcribeWithPuter } from '@/lib/puterVoice';
 
 interface TranslationResult {
   detectedLanguage: string;
@@ -297,6 +298,23 @@ export default function AddProduct() {
         }
 
         try {
+          // Priority 1: Free Unlimited Speech-to-Text via Puter.js (Whisper & GPT-4o)
+          const puterResult = await transcribeWithPuter(blob, selectedLang);
+          if (puterResult.success && puterResult.text) {
+            console.log(`[Puter STT] Voice description transcribed (${puterResult.provider}): "${puterResult.text}"`);
+            const base = baseTextRef.current;
+            const updated = base ? `${base} ${puterResult.text}` : puterResult.text;
+            setTranscript(updated);
+            transcriptRef.current = updated;
+            baseTextRef.current = updated;
+            setInterimText('');
+            setVoiceState('SUCCESS');
+            setTimeout(() => setVoiceState('IDLE'), 1200);
+            return;
+          }
+
+          // Priority 2: Fallback to Backend /api/speech-to-text
+          console.log('[STT Fallback] Trying backend speech-to-text endpoint...');
           const formData = new FormData();
           formData.append('audio', blob, 'artisan-recording.webm');
           formData.append('language', selectedLang);
@@ -323,12 +341,12 @@ export default function AddProduct() {
             setVoiceState('SUCCESS');
             setTimeout(() => setVoiceState('IDLE'), 1200);
           } else {
-            console.warn('[Level 2 STT] Backend returned empty transcription:', data);
+            console.warn('[STT] Empty transcription result');
             setError('Voice typing could not be completed. You can type manually or try again.');
             setVoiceState('ERROR');
           }
         } catch (serverErr: any) {
-          console.error('[Level 2 STT] Transcription request error:', serverErr);
+          console.error('[Voice STT] Transcription request error:', serverErr);
           setError('Voice typing could not be completed. You can type manually or try again.');
           setVoiceState('ERROR');
         }
@@ -595,11 +613,15 @@ export default function AddProduct() {
         <section className="bg-white p-4 rounded-2xl shadow-xs border border-slate-200 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+              <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2 flex-wrap">
                 <Mic className="w-4 h-4 text-orange-600" />
                 2. Voice Description / बोलकर विवरण लिखें
+                <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Sparkles className="w-2.5 h-2.5 text-emerald-600" />
+                  Puter AI Whisper
+                </span>
               </h2>
-              <p className="text-[11px] text-slate-500">Speak or write in any regional language</p>
+              <p className="text-[11px] text-slate-500">Free unlimited voice cataloging in all Indian languages</p>
             </div>
             
             {/* Speech Language Dropdown */}
