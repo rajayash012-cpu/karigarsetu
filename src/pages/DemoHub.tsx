@@ -608,18 +608,18 @@ export default function DemoHub() {
               {DEMO_DATASET.buyers.map((buyer) => (
                 <div key={buyer.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs space-y-2">
                   <div className="flex items-start justify-between gap-1">
-                    <h3 className="text-xs font-black text-slate-900 truncate">{buyer.companyName}</h3>
+                    <h3 className="text-xs font-black text-slate-900 truncate">{buyer.businessName}</h3>
                     <span className="bg-slate-100 text-slate-700 text-[10px] font-mono px-1.5 py-0.2 rounded shrink-0">
                       {buyer.category}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-600 flex items-center gap-1">
                     <Building2 className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span>{buyer.authorizedPerson} • {buyer.city}, {buyer.state}</span>
+                    <span>{buyer.authorizedPerson} • {buyer.location}</span>
                   </p>
                   <div className="pt-2 border-t border-slate-100 text-[11px] flex justify-between items-center text-slate-500">
-                    <span>Typical: <strong>{buyer.typicalOrder}</strong></span>
-                    <span className="text-emerald-700 font-bold">Trust: {buyer.trustScore}/100</span>
+                    <span>Typical MOQ: <strong>{buyer.typicalMoq} units</strong></span>
+                    <span className="text-emerald-700 font-bold">Trust: 96/100</span>
                   </div>
                 </div>
               ))}

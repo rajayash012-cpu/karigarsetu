@@ -16,30 +16,15 @@ export type PuterSTTModel = 'gpt-4o-mini-transcribe' | 'gpt-4o-transcribe' | 'wh
 
 export const DEFAULT_STT_MODEL: PuterSTTModel = 'gpt-4o-mini-transcribe';
 
-declare global {
-  interface Window {
-    puter?: {
-      ai?: {
-        speech2txt: (
-          source: string | File | Blob | { audio?: string | File | Blob; file?: string | File | Blob; [key: string]: any },
-          options?: any,
-          testMode?: boolean
-        ) => Promise<any>;
-      };
-      print?: (...args: any[]) => void;
-    };
-  }
-}
-
 /**
  * Ensures Puter instance is initialized in the browser environment
  */
 export async function getPuterInstance(): Promise<any> {
-  if (typeof window !== 'undefined' && window.puter?.ai?.speech2txt) {
-    return window.puter;
+  if (typeof window !== 'undefined' && typeof (window as any).puter?.ai?.speech2txt === 'function') {
+    return (window as any).puter;
   }
 
-  if (puter?.ai?.speech2txt) {
+  if (typeof (puter as any)?.ai?.speech2txt === 'function') {
     return puter;
   }
 
@@ -58,8 +43,8 @@ export async function getPuterInstance(): Promise<any> {
       });
     }
 
-    if (window.puter?.ai?.speech2txt) {
-      return window.puter;
+    if (typeof (window as any).puter?.ai?.speech2txt === 'function') {
+      return (window as any).puter;
     }
   }
 

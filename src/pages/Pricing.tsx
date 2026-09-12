@@ -289,7 +289,7 @@ export default function Pricing() {
     setIsSpeaking(true);
   };
 
-  const selectCraftSample = (craft: 'dokra' | 'madhubani' | 'walnut' | 'banarasi') => {
+  const selectCraftSample = (craft: 'dokra' | 'madhubani' | 'walnut' | 'brass' | 'banarasi') => {
     let preset: any = {};
     if (craft === 'dokra') {
       preset = {

@@ -292,7 +292,9 @@ export default function MarketMatch() {
                       <div className="min-w-0">
                         <h3 className="font-bold text-sm text-slate-900 flex items-center gap-1.5 truncate">
                           <span>{m.buyerName}</span>
-                          <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" title="Verified B2B Buyer" />
+                          <span title="Verified B2B Buyer">
+                            <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" />
+                          </span>
                         </h3>
                         <p className="text-xs text-slate-500 mt-0.5">
                           {m.buyerCategory} • {m.buyerCity}
